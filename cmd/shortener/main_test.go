@@ -7,11 +7,14 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/0xdreamerr/url-shortener/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestGetShortUrl(t *testing.T) {
+	config.SetConfig()
+
 	type want struct {
 		code        int
 		response    string
