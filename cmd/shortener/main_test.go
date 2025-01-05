@@ -68,7 +68,7 @@ func TestGetShortUrl(t *testing.T) {
 				request := httptest.NewRequest(http.MethodGet, "/", bodyReader)
 
 				w := httptest.NewRecorder()
-				getShortUrl(w, request)
+				getShortURL(w, request)
 
 				res := w.Result()
 
@@ -84,7 +84,7 @@ func TestGetShortUrl(t *testing.T) {
 				request := httptest.NewRequest(http.MethodPost, "/", bodyReader)
 
 				w := httptest.NewRecorder()
-				getShortUrl(w, request)
+				getShortURL(w, request)
 
 				res := w.Result()
 
@@ -154,7 +154,7 @@ func TestRedirectTo(t *testing.T) {
 		request := httptest.NewRequest(http.MethodPost, "/", bodyReader)
 
 		w := httptest.NewRecorder()
-		getShortUrl(w, request)
+		getShortURL(w, request)
 	}
 
 	for _, test := range tests {
