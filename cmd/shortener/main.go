@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/0xdreamerr/url-shortener/config"
+
 	"github.com/go-chi/chi/v5"
 )
 
@@ -22,7 +24,7 @@ func getShortURL(res http.ResponseWriter, req *http.Request) {
 		h.Write([]byte(body))
 		hash := "/" + hex.EncodeToString(h.Sum(nil))
 
-		result := "http://localhost:8080" + hash[:8]
+		result := config.FlagResultAddr + hash[:8]
 
 		res.Header().Set("content-type", "text/plain")
 		res.WriteHeader(http.StatusCreated)
@@ -54,12 +56,14 @@ func redirectTo(res http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	config.ParseFlags()
+
 	r := chi.NewRouter()
 
 	r.Post("/", getShortURL)
 	r.Get("/{id}", redirectTo)
 
-	err := http.ListenAndServe(`:8080`, r)
+	err := http.ListenAndServe(config.FlagServerAddr, r)
 	if err != nil {
 		panic(err)
 	}
