@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -63,6 +64,7 @@ func main() {
 	r.Post("/", getShortURL)
 	r.Get("/{id}", redirectTo)
 
+	fmt.Printf("Server started at: %s", config.Config.ServerAddr)
 	err := http.ListenAndServe(config.Config.ServerAddr, r)
 	if err != nil {
 		panic(err)
