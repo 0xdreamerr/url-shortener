@@ -5,6 +5,8 @@ import (
 	"encoding/hex"
 	"io"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 var urls = make(map[string]string)
@@ -52,11 +54,12 @@ func redirectTo(res http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc(`/`, getShortURL)
-	mux.HandleFunc(`/{id}`, redirectTo)
+	r := chi.NewRouter()
 
-	err := http.ListenAndServe(`:8080`, mux)
+	r.Post("/", getShortURL)
+	r.Get("/{id}", redirectTo)
+
+	err := http.ListenAndServe(`:8080`, r)
 	if err != nil {
 		panic(err)
 	}
