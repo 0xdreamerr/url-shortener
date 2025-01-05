@@ -3,14 +3,13 @@ package main
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
 	"io"
 	"net/http"
 )
 
 var urls = make(map[string]string)
 
-func getShortUrl(res http.ResponseWriter, req *http.Request) {
+func getShortURL(res http.ResponseWriter, req *http.Request) {
 	if req.Method == http.MethodPost {
 		body, err := io.ReadAll(req.Body)
 		if err != nil {
@@ -21,7 +20,7 @@ func getShortUrl(res http.ResponseWriter, req *http.Request) {
 		h.Write([]byte(body))
 		hash := "/" + hex.EncodeToString(h.Sum(nil))
 
-		result := fmt.Sprintf("http://localhost:8080" + hash[:8])
+		result := "http://localhost:8080" + hash[:8]
 
 		res.Header().Set("content-type", "text/plain")
 		res.WriteHeader(http.StatusCreated)
@@ -36,9 +35,9 @@ func getShortUrl(res http.ResponseWriter, req *http.Request) {
 
 func redirectTo(res http.ResponseWriter, req *http.Request) {
 	if req.Method == http.MethodGet {
-		shortUrl := req.URL.String()
+		shortURL := req.URL.String()
 
-		result := urls[shortUrl]
+		result := urls[shortURL]
 		if result == "" {
 			http.Error(res, "ShortURL not found", http.StatusNotFound)
 			return
@@ -54,7 +53,7 @@ func redirectTo(res http.ResponseWriter, req *http.Request) {
 
 func main() {
 	mux := http.NewServeMux()
-	mux.HandleFunc(`/`, getShortUrl)
+	mux.HandleFunc(`/`, getShortURL)
 	mux.HandleFunc(`/{id}`, redirectTo)
 
 	err := http.ListenAndServe(`:8080`, mux)
