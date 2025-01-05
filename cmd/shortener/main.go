@@ -24,7 +24,7 @@ func getShortURL(res http.ResponseWriter, req *http.Request) {
 		h.Write([]byte(body))
 		hash := "/" + hex.EncodeToString(h.Sum(nil))
 
-		result := config.FlagResultAddr + hash[:8]
+		result := config.Config.ResultAddr + hash[:8]
 
 		res.Header().Set("content-type", "text/plain")
 		res.WriteHeader(http.StatusCreated)
@@ -56,14 +56,14 @@ func redirectTo(res http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	config.ParseFlags()
+	config.SetConfig()
 
 	r := chi.NewRouter()
 
 	r.Post("/", getShortURL)
 	r.Get("/{id}", redirectTo)
 
-	err := http.ListenAndServe(config.FlagServerAddr, r)
+	err := http.ListenAndServe(config.Config.ServerAddr, r)
 	if err != nil {
 		panic(err)
 	}

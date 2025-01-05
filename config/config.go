@@ -4,12 +4,18 @@ import (
 	"flag"
 )
 
-var FlagServerAddr string
-var FlagResultAddr string
+type Configuration struct {
+	ServerAddr string
+	ResultAddr string
+}
 
-func ParseFlags() {
-	flag.StringVar(&FlagServerAddr, "a", "localhost:8080", "address and port to run server")
-	flag.StringVar(&FlagResultAddr, "b", "http://localhost:8080", "base address of the shortened URL")
+var Config Configuration
+
+func SetConfig() {
+	serverAddr := flag.String("a", "localhost:8080", "address and port to run server")
+	resultAddr := flag.String("b", "http://localhost:8080", "base address of the shortened URL")
+
+	Config = Configuration{ServerAddr: *serverAddr, ResultAddr: *resultAddr}
 
 	flag.Parse()
 }
