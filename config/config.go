@@ -2,6 +2,7 @@ package config
 
 import (
 	"flag"
+	"os"
 )
 
 type Configuration struct {
@@ -10,12 +11,22 @@ type Configuration struct {
 }
 
 var Config Configuration
+var serverAddr string
+var resultAddr string
 
 func SetConfig() {
-	serverAddr := flag.String("a", "localhost:8080", "address and port to run server")
-	resultAddr := flag.String("b", "http://localhost:8080", "base address of the shortened URL")
+	flag.StringVar(&serverAddr, "a", "localhost:8080", "address and port to run server")
+	flag.StringVar(&resultAddr, "b", "http://localhost:8080", "base address of the shortened URL")
 
 	flag.Parse()
 
-	Config = Configuration{ServerAddr: *serverAddr, ResultAddr: *resultAddr}
+	if envRunAddr := os.Getenv("SERVER_ADDRESS"); envRunAddr != "" {
+		serverAddr = envRunAddr
+	}
+
+	if envResAddr := os.Getenv("BASE_URL"); envResAddr != "" {
+		resultAddr = envResAddr
+	}
+
+	Config = Configuration{ServerAddr: serverAddr, ResultAddr: resultAddr}
 }
